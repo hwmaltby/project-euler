@@ -2,6 +2,56 @@
 import time
 import math
 
+def add_to_set_dict(key, entry, dct):
+    if key in dct:
+        dct[key].add(entry)
+    else:
+        dct[key] = {entry}
+
+def update(m, n, k):
+    return k * (2 * m * n + n * n), k * (m * m - n * n)
+
+def generate(lmt):
+    dct = {}
+    m = n = k = 1
+    stop = math.ceil(math.sqrt(2 * lmt))
+    while m < stop:
+        while n < m:
+            a, b = update(m, n, k)
+            while a < lmt and b < lmt:
+                a, b = update(m, n, k)
+                add_to_set_dict(a, b, dct)
+                add_to_set_dict(b, a, dct)
+                k += 1
+            n += 1
+            k = 1
+        m += 1
+        if m * m > lmt:
+            n = math.ceil(math.sqrt(m * m - lmt))
+        else:
+            n = 1
+    return dct
+
+def solve(n):
+    """."""
+    dct = generate(n)
+    all_sums = set()
+
+    for i in dct:
+        for j in dct[i]:
+            for k in dct[j].intersection(dct[i]):
+                if i + j + k < n:
+                    all_sums.add(i + j + k)
+
+    return sum(all_sums)
+
+start = time.time()
+N = 120000
+print(solve(N))
+print("Elapsed time: {:0.4f}".format(time.time() - start))
+
+
+'''OLD FUNCTIONS: (saved for re-use elsewhere)
 def sieve(n):
     a = [True] * (n + 1)
     a[0] = a[1] = False
@@ -58,33 +108,4 @@ def count_diffs_of_squares(fctrs):
         return 0
     tmp = fctrs.copy()
     tmp[2] -= 2
-    return (totient(tmp) + 1) // 2
-
-def solve(n):
-    """."""
-    sqrs = set([i * i for i in range(1, n + 1)])
-    dct = {}
-    for i in range(1, n - 1):
-        dct[i] = set()
-        j = 1
-        while j < i:
-            if (i * i + i * j + j * j) in sqrs:
-                dct[i].add(j)
-            j += 1
-
-    print("part 1 done")
-
-    all_sums = set()
-
-    for i in range(1, n - 1):
-        for j in dct[i]:
-            for k in dct[j].intersection(dct[i]):
-                if i + j + k < n:
-                    all_sums.add(i + j + k)
-
-    return sum(all_sums)
-
-start = time.time()
-N = 1200
-print(solve(N))
-print("Elapsed time: {:0.4f}".format(time.time() - start))
+    return (totient(tmp) + 1) // 2'''
