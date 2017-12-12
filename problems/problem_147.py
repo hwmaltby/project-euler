@@ -13,7 +13,7 @@ def solve(m, n):
         to_add = (1 + k1 + k2) * (4 * i*i*i*i - i*i - 3 * i) / 6 + (k1 * (k1 + 1) + k2 * (k2 + 1)) * (4 * i*i*i - i) / 6
         #print(to_add)
         total += to_add
-    return total
+    return int(total)
 
 start = time.time()
 M, N = 47, 43
